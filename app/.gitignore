@@ -1,0 +1,24 @@
+# temp files from editors
+*~
+*.bak
+.DS_Store
+.buildpath
+.project
+.settings
+*.tmproj
+build
+.idea
+.vscode
+nbproject/
+.env
+
+# hidden files created by Windows
+Thumbs.db
+desktop.ini
+
+/web/core
+/web/core/*
+
+/vendor
+
+/node_modules

@@ -1,0 +1,59 @@
+version: '3'
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+  web:
+    build: ./docker/web
+    ports:
+        - 8080:80
+    environment:
+      VIRTUAL_HOST: app.laravel.local
+    volumes:
+        - ./app:/var/www/html
+        - ./logs/nginx:/var/log/nginx/
+    depends_on:
+        - app
+  app:
+    build: ./docker/app
+    environment:
+      PHP_INI_DIR: /etc/php7
+    volumes:
+      - ./app:/var/www/html
+      - composer_vendor_volume:/var/www/html/vendor
+    depends_on:
+        - db
+        - mail
+  db:
+    image: mysql:5.7.16
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: app
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - 3306:3306
+  mail:
+    build: ./docker/mail
+    environment:
+      VIRTUAL_HOST: mail.laravel.local
+    # ports:
+    #   - "1080:80"
+  dbclient:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      VIRTUAL_HOST: phpmyadmin.laravel.local
+      MYSQL_DATABASE: app
+      PMA_ARBITRARY: 1
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: password
+    depends_on:
+        - db
+    ports:
+      - 8082:80
+volumes:
+  composer_vendor_volume:
