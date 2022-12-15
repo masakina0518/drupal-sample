@@ -11,7 +11,7 @@ services:
     ports:
         - 8080:80
     environment:
-      VIRTUAL_HOST: app.laravel.local
+      VIRTUAL_HOST: app.drupal.local
     volumes:
         - ./app:/var/www/html
         - ./logs/nginx:/var/log/nginx/
@@ -21,9 +21,15 @@ services:
     build: ./docker/app
     environment:
       PHP_INI_DIR: /etc/php7
+      COMPOSER_PROCESS_TIMEOUT: 1000
     volumes:
-      - ./app:/var/www/html
-      - composer_vendor_volume:/var/www/html/vendor
+      - ./app/web/modules:/var/www/html/web/modules
+      - ./app/web/sites:/var/www/html/web/sites
+      - ./app/web/themes:/var/www/html/web/themes
+      - ./app/composer.json:/var/www/html/composer.json
+      - ./app/composer.lock:/var/www/html/composer.lock
+      - ./app/.editorconfig:/var/www/html/.editorconfig
+      - ./app/.vscode:/var/www/html/.vscode
     depends_on:
         - db
         - mail
@@ -45,7 +51,7 @@ services:
   dbclient:
     image: phpmyadmin/phpmyadmin
     environment:
-      VIRTUAL_HOST: phpmyadmin.laravel.local
+      VIRTUAL_HOST: phpmyadmin.drupal.local
       MYSQL_DATABASE: app
       PMA_ARBITRARY: 1
       PMA_HOST: db
@@ -57,3 +63,4 @@ services:
       - 8082:80
 volumes:
   composer_vendor_volume:
+  drupal_core_volume:

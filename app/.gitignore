@@ -8,7 +8,6 @@
 *.tmproj
 build
 .idea
-.vscode
 nbproject/
 .env
 
