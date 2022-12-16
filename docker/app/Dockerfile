@@ -40,7 +40,8 @@ RUN docker-php-ext-install pdo\
     gd \
     zip \
     gmp \
-    bcmath \ 
+    bcmath \
+    opcache \
     exif 
 
 RUN pecl install xdebug-3.1.6 \
